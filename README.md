@@ -1,5 +1,7 @@
-A HTTP Server that sends Druid metrics to a Kafka topic.
+Druid metrics ollector
 ===
+A HTTP Server that sends Druid metrics to a Kafka topic.
+
 
 Install
 ---
