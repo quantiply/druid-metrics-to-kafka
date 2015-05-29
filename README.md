@@ -1,6 +1,6 @@
 Druid metrics collector
 ===
-A HTTP Server that sends Druid metrics to a Kafka topic.
+A simple HTTP server that forwards Druid metrics to a Kafka topic.
 
 
 Install
