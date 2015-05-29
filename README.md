@@ -1,4 +1,4 @@
-Druid metrics ollector
+Druid metrics collector
 ===
 A HTTP Server that sends Druid metrics to a Kafka topic.
 
@@ -8,8 +8,7 @@ Install
 ```
 apt-get update
 apt-get install -y python-pip
-apt-get install -y python-twisted
-pip install kafka-python cherrypy docopt simplejson
+pip install kafka-python cherrypy docopt
 ```
 
 Run

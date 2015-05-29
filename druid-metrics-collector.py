@@ -1,10 +1,25 @@
-"""Usage:
+"""
+ Copyright 2014-2015 Quantiply Corporation. All rights reserved.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+Usage:
   druid-metrics-collector.py <kafka_host> <kafka_port> <kafka_topic> [--log=<dir>]
 """
 from docopt import docopt
 
 import cherrypy
-import simplejson
+import json
 
 from kafka.client import KafkaClient
 from kafka.producer import SimpleProducer
@@ -43,7 +58,7 @@ class KafkaMetrics(object):
 
 if __name__ == '__main__':    
     arguments = docopt(__doc__, version='0.1.1rc')
-    KAFKA_HOST = arguments['<kafka_host>'] #'fb-log-0.dev.quantezza.com'
+    KAFKA_HOST = arguments['<kafka_host>']
     KAFKA_PORT = arguments['<kafka_port>'] #9092
     TOPIC = arguments['<kafka_topic>'] # "druid-metrics"
     LOG_FILE = "./druid_metrics.log"
