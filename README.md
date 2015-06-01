@@ -19,12 +19,12 @@ Install
 apt-get update
 apt-get install -y python-pip
 pip install kafka-python cherrypy docopt
-    ```
+```
 
 Run
 ---
-1. `druid-metrics-collector.py <broker_list> <kafka_topic> [--host=<socket_host>] [--port=<socket_port>] [--log=<dir>]`
-2. Configure druid to send to the http://<host>:<port>/metrics endpoint.
+1. `druid-metrics-collector.py <broker_list> <kafka_topic> [--host=<socket_host>] [--port=<socket_port>]`
+2. Configure druid to send to the `http://<host>:<port>/metrics` endpoint.
 
 Test
 ---
