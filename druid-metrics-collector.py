@@ -57,7 +57,7 @@ class KafkaMetrics(object):
 if __name__ == '__main__':    
     arguments = docopt(__doc__, version='0.1.1rc')
     BROKER_LIST = arguments['<broker_list>']
-    SOCKET_PORT = arguments['--port'] or 9999
+    SOCKET_PORT = int(arguments['--port'] or 9999)
     SOCKET_HOST = arguments['--host'] or '0.0.0.0'
     TOPIC = arguments['<kafka_topic>'] or "druid-metrics"
 
