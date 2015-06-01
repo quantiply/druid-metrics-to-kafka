@@ -14,7 +14,7 @@
   limitations under the License.
 
 Usage:
-  druid-metrics-collector.py <kafka_host> <kafka_port> <kafka_topic> [--log=<dir>]
+  druid-metrics-collector.py <broker_list> <kafka_topic> [--host=<socket_host>] [--port=<socket_port>] [--log=<dir>]
 """
 from docopt import docopt
 
@@ -28,12 +28,11 @@ import logging
 
 class KafkaMetrics(object):
     
-    def __init__(self, kafka_host, kafka_port, kafka_topic, log_file):
+    def __init__(self, broker_list, kafka_topic, log_file):
         logging.basicConfig(level=logging.INFO, filename=log_file)
         self.log = logging.getLogger('druid-kafka-metrics')
-        self.log.info("Kafka (host=%s, port=%s, topic=%s), log=%s" %(kafka_host, kafka_port, kafka_topic, log_file))
-        kafka = '%s:%s' % (kafka_host, kafka_port)
-        client = KafkaClient(kafka)
+        self.log.info("Kafka (brokers=%s, topic=%s), log=%s" %(broker_list, kafka_topic, log_file))
+        client = KafkaClient(broker_list)
         self.producer = SimpleProducer(client, batch_send=True,  batch_send_every_n=20, batch_send_every_t=60)
         self.msg_count = 0
         self.kafka_topic = kafka_topic
@@ -46,9 +45,8 @@ class KafkaMetrics(object):
 
         for message in messages:
             self.msg_count += 1
-
             self.log.debug("%s - %s" % (self.msg_count, str(message)))
-            self.producer.send_messages(self.kafka_topic, simplejson.dumps(message))
+            self.producer.send_messages(self.kafka_topic, json.dumps(message))
 
             if self.msg_count % 100 == 0 :
                 self.log.info("%s messages processed." % (self.msg_count, ))
@@ -58,12 +56,12 @@ class KafkaMetrics(object):
 
 if __name__ == '__main__':    
     arguments = docopt(__doc__, version='0.1.1rc')
-    KAFKA_HOST = arguments['<kafka_host>']
-    KAFKA_PORT = arguments['<kafka_port>'] #9092
-    TOPIC = arguments['<kafka_topic>'] # "druid-metrics"
-    LOG_FILE = "./druid_metrics.log"
-    if arguments['--log']:
-        LOG_FILE = arguments['--log']
-    cherrypy.config.update({'server.socket_port': 9999})
-    cherrypy.config.update({'server.socket_host': '0.0.0.0'})
-    cherrypy.quickstart(KafkaMetrics(KAFKA_HOST, KAFKA_PORT, TOPIC, LOG_FILE))
+    BROKER_LIST = arguments['<broker_list>']
+    SOCKET_PORT = arguments['--port'] or 9999
+    SOCKET_HOST = arguments['--host'] or '0.0.0.0'
+    TOPIC = arguments['<kafka_topic>'] or "druid-metrics"
+    LOG_FILE = arguments['--log'] or "./druid_metrics.log"
+
+    cherrypy.config.update({'server.socket_port': SOCKET_PORT})
+    cherrypy.config.update({'server.socket_host': SOCKET_HOST})
+    cherrypy.quickstart(KafkaMetrics(BROKER_LIST, TOPIC, LOG_FILE))
