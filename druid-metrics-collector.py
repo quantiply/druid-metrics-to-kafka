@@ -14,7 +14,7 @@
   limitations under the License.
 
 Usage:
-  druid-metrics-collector.py <broker_list> <kafka_topic> [--host=<socket_host>] [--port=<socket_port>] [--log=<dir>]
+  druid-metrics-collector.py <broker_list> <kafka_topic> [--host=<socket_host>] [--port=<socket_port>]
 """
 from docopt import docopt
 
@@ -28,10 +28,10 @@ import logging
 
 class KafkaMetrics(object):
     
-    def __init__(self, broker_list, kafka_topic, log_file):
-        logging.basicConfig(level=logging.INFO, filename=log_file)
+    def __init__(self, broker_list, kafka_topic):
+        logging.basicConfig(level=logging.INFO)
         self.log = logging.getLogger('druid-kafka-metrics')
-        self.log.info("Kafka (brokers=%s, topic=%s), log=%s" %(broker_list, kafka_topic, log_file))
+        self.log.info("Kafka (brokers=%s, topic=%s)" %(broker_list, kafka_topic))
         client = KafkaClient(broker_list)
         self.producer = SimpleProducer(client, batch_send=True,  batch_send_every_n=20, batch_send_every_t=60)
         self.msg_count = 0
@@ -60,8 +60,7 @@ if __name__ == '__main__':
     SOCKET_PORT = arguments['--port'] or 9999
     SOCKET_HOST = arguments['--host'] or '0.0.0.0'
     TOPIC = arguments['<kafka_topic>'] or "druid-metrics"
-    LOG_FILE = arguments['--log'] or "./druid_metrics.log"
 
     cherrypy.config.update({'server.socket_port': SOCKET_PORT})
     cherrypy.config.update({'server.socket_host': SOCKET_HOST})
-    cherrypy.quickstart(KafkaMetrics(BROKER_LIST, TOPIC, LOG_FILE))
+    cherrypy.quickstart(KafkaMetrics(BROKER_LIST, TOPIC))
