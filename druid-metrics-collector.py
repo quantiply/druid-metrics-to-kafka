@@ -33,7 +33,7 @@ class KafkaMetrics(object):
         self.log = logging.getLogger('druid-kafka-metrics')
         self.log.info("Kafka (brokers=%s, topic=%s)" %(broker_list, kafka_topic))
         client = KafkaClient(broker_list)
-        self.producer = SimpleProducer(client, batch_send=True,  batch_send_every_n=20, batch_send_every_t=60)
+        self.producer = SimpleProducer(client)
         self.msg_count = 0
         self.kafka_topic = kafka_topic
         
